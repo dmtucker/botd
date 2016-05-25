@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import sys
 import hashlib
 import json
@@ -15,8 +13,6 @@ from twisted.python import log
 from twisted.internet import reactor, protocol
 from twisted.words.protocols import irc
 from twython import Twython
-
-__version__ = '0.1.0b'
 
 
 def shortened_url(url):
@@ -436,21 +432,3 @@ class BotFactory(protocol.ClientFactory):
     #def clientConnectionFailed(self, connector, reason):
     #    log.msg('clientConnectionFailed: '+str(reason))
     #    reactor.stop()
-
-
-if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        print('usage: '+sys.argv[0]+' [configfile ...]')
-    log.startLogging(sys.stdout)
-    for cfgfile in sys.argv[1:]:
-        config = ConfigParser.ConfigParser()
-        log.msg('Reading '+cfgfile+'... ')
-        log.msg('done' if config.read(cfgfile) == [cfgfile] else 'fail')
-        # TODO log.startLogging(open(cfgfile+'.log', 'w'))
-        reactor.connectTCP(
-            host=config.get('connection', 'server'),
-            port=int(config.get('connection', 'port')),
-            factory=BotFactory(config)
-        )
-        config = None
-    reactor.run()

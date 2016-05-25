@@ -1,8 +1,15 @@
-FROM debian:latest
-ADD botd.json /root/botd.json
-ADD botd.py /root/botd.py
-RUN chmod +x /root/botd.py
-RUN apt-get update
-RUN apt-get install -y python python-pip python-dev python-lxml
-RUN pip install feedparser twisted twython
-CMD ["/root/botd.py /root/botd.json"]
+FROM python:2
+
+RUN pip install --upgrade pip
+RUN pip install pep8 pylint
+
+WORKDIR /src
+COPY . .
+RUN pep8 botd setup.py
+RUN pylnt botd setup.py
+RUN rm -rf dist
+RUN python setup.py sdist
+RUN pip install dist/*
+WORKDIR /
+
+ENTRYPOINT ["botd"]
