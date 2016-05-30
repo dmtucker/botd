@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # coding: utf-8
 
 """A setuptools based setup module.
@@ -13,6 +13,9 @@ from setuptools import setup, find_packages
 with open('README.rst') as readme_file:
     README = readme_file.read()
 
+with open('requirements.txt') as requirements_file:
+    REQUIREMENTS = requirements_file.read().splitlines()
+
 setup(
     name='botd',
     version='0.1.0',
@@ -22,21 +25,15 @@ setup(
     author_email='david.michael.tucker@gmail.com',
     license='GPLv2+',
     url='https://github.com/dmtucker/botd',
-    packages=find_packages(exclude=['contrib', 'docs', 'tests']),
+    packages=find_packages(),
     include_package_data=True,
     entry_points={'console_scripts': ['botd = botd.__main__:main']},
     keywords='IRC bot',
-    install_requires=[
-        'feedparser',
-        'lxml',
-        'requests',
-        'twisted',
-        'twython',
-    ],
+    install_requires=REQUIREMENTS,
     classifiers=[
+        'Development Status :: 3 - Alpha',
         'License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
-        'Development Status :: 3 - Alpha',
     ],
 )

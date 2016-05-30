@@ -1,27 +1,66 @@
+"""BotdFactory CLI Interface"""
+
+from __future__ import absolute_import
+
 import argparse
+import random
+import string
 import sys
-import ConfigParser
-from twisted.internet import reactor
+
+from twisted.internet import reactor, ssl
 from twisted.python import log
 
-import botd
+from botd import botd
 
 
-def main():
-    if len(sys.argv) < 2:
-        print('usage: '+sys.argv[0]+' [configfile ...]')
+def cli(parser=argparse.ArgumentParser()):
+    """Parse CLI arguments and options."""
+    parser.add_argument(
+        '-a', '--admin',
+        help='Specify an administrator for the bot.',
+    )
+    parser.add_argument(
+        '-k', '--key',
+        help='Specify a password for administering the bot.',
+        default=''.join(random.choice(string.ascii_letters) for _ in range(8)),
+    )
+    parser.add_argument(
+        '-n', '--nick',
+        help='Specify a nickname to use.',
+        default='botd{0:05}'.format(random.randint(0, 99999)),
+    )
+    parser.add_argument(
+        '-p', '--port',
+        help='Specify a port number to connect on.',
+        default=6697,
+    )
+    parser.add_argument(
+        '-i', '--identify',
+        help='Specify a password to identify to NickServ with.',
+    )
+    parser.add_argument(
+        'server',
+        nargs='?',
+        help='Specify a server to connect to.',
+        default='chat.freenode.net',
+    )
+    return parser
+
+
+def main(args=cli().parse_args()):
+    """Execute CLI commands."""
     log.startLogging(sys.stdout)
-    for cfgfile in sys.argv[1:]:
-        config = ConfigParser.ConfigParser()
-        log.msg('Reading '+cfgfile+'... ')
-        log.msg('done' if config.read(cfgfile) == [cfgfile] else 'fail')
-        # TODO log.startLogging(open(cfgfile+'.log', 'w'))
-        reactor.connectTCP(
-            host=config.get('connection', 'server'),
-            port=int(config.get('connection', 'port')),
-            factory=botd.BotFactory(config)
-        )
-        config = None
+    reactor.connectSSL(
+        host=args.server,
+        port=args.port,
+        factory=botd.BotdFactory(
+            nickname=args.nick,
+            key=args.key,
+            identify=args.identify,
+            admins=[] if args.admin is None else [args.admin]
+        ),
+        contextFactory=ssl.ClientContextFactory(),
+    )
     reactor.run()
 
 
