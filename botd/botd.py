@@ -23,11 +23,11 @@ class Botd(irc.IRCClient):
 
     def set_key(self, key):
         """Set a new bot key."""
-        log.msg('The key for {0} is {1}'.format(self.nickname, key))
+        log.msg('The key for {0} is {1}.'.format(self.nickname, key))
         self.key_hash = custom_app_context.encrypt(key)
 
     def authorize(self, user, key=None):
-        """Determine if a user or key grants permission for administrative actions."""
+        """Determine if a user and/or key grants permission for administrative actions."""
         return (
             user.split('!')[0] in self.admins
             if key is None else

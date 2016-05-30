@@ -7,10 +7,9 @@ import inspect
 import textwrap
 
 from twisted.internet import reactor
-from twisted.python import log
 
 
-def argv_length(minimum=0, maximum=None):
+def argv_length(minimum, maximum):
     """Create a decorator that checks for an appropriate number of args in the message."""
     def decorator(func):
         """Decorate functions that expect args in the message."""
@@ -18,8 +17,6 @@ def argv_length(minimum=0, maximum=None):
         def decorated(cls, bot, user, channel, message):
             """Call the function if the expected number of arguments were provided."""
             argv = message.split(' ')
-            if maximum is None:
-                maximum = len(argv)
             if minimum <= len(argv) <= maximum:
                 func(cls, bot, user, channel, message)
             else:
@@ -30,19 +27,29 @@ def argv_length(minimum=0, maximum=None):
 
 def require_authorization(key_index=None):
     """Create a decorator that checks for authorization."""
-    def decorator(func):
+    def decorator(func, key_index=key_index):
         """Decorate functions that require authorization."""
         @wraps(func)
-        def decorated(cls, bot, user, channel, message):
+        def decorated(
+                cls,
+                bot,
+                user,
+                channel,
+                message,
+                key_index=key_index,
+        ):  # pylint: disable=too-many-arguments
             """Call the function if the user is authorized."""
             argv = message.split(' ')
-            key = None if key_index is None or key_index < len(argv) else argv[key_index]
+            key = argv[key_index] if key_index is not None and key_index < len(argv) else None
             if bot.authorize(user, key):
                 func(cls, bot, user, channel, message)
             else:
-                msg = '{0} is not authorized.'.format(user)
-                log.msg(msg)
-                bot.msg(user.split('!')[0], msg)
+                bot.msg(
+                    user.split('!')[0],
+                    '{0} is not authorized.'.format(user)
+                    if key is None else
+                    'Incorrect Key: {0}'.format(key),
+                )
         return decorated
     return decorator
 
@@ -53,7 +60,7 @@ class Commands(object):
     """Methods Invocable via IRC"""
 
     @classmethod
-    @argv_length(minimum=1, maximum=1)
+    @argv_length(1, 1)
     def admins(cls, bot, user, channel, message):
         """
         usage: admins
@@ -62,7 +69,7 @@ class Commands(object):
         bot.msg(user.split('!')[0], ', '.join(bot.admins))
 
     @classmethod
-    @argv_length(minimum=2, maximum=2)
+    @argv_length(2, 2)
     @require_authorization()
     def key(cls, bot, user, channel, message):
         """
@@ -72,7 +79,7 @@ class Commands(object):
         bot.set_key(message.split(' ')[1])
 
     @classmethod
-    @argv_length(minimum=2, maximum=3)
+    @argv_length(2, 3)
     @require_authorization(key_index=2)
     def join(cls, bot, user, channel, message):
         """
@@ -82,7 +89,7 @@ class Commands(object):
         bot.join(message.split(' ')[1])
 
     @classmethod
-    @argv_length(minimum=2, maximum=3)
+    @argv_length(2, 3)
     @require_authorization(key_index=2)
     def leave(cls, bot, user, channel, message):
         """
@@ -92,7 +99,7 @@ class Commands(object):
         bot.leave(message.split(' ')[1])
 
     @classmethod
-    @argv_length(minimum=1, maximum=2)
+    @argv_length(1, 2)
     @require_authorization(key_index=1)
     def stop(cls, bot, user, channel, message):
         """
