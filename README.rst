@@ -5,6 +5,8 @@ IRC Bot
 
 Available on `Docker Hub <//registry.hub.docker.com/u/dmtucker/botd>`__
 
+|Build Status| |PyPI Version|
+
 License
 -------
 
@@ -23,3 +25,8 @@ Public License for more details.
 You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+.. |Build Status| image:: https://img.shields.io/travis/dmtucker/botd.svg
+   :target: https://travis-ci.org/dmtucker/botd
+.. |PyPI Version| image:: https://img.shields.io/pypi/v/botd.svg
+   :target: https://pypi.python.org/pypi/botd
