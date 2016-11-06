@@ -3,7 +3,7 @@ botd
 
 IRC Bot
 
-|Build Status| |Docker Build| |PyPI Version|
+|Build Status| |Docker Build|
 
 License
 -------
@@ -28,5 +28,3 @@ with this program; if not, write to the Free Software Foundation, Inc.,
    :target: https://travis-ci.org/dmtucker/botd
 .. |Docker Build| image:: https://img.shields.io/docker/automated/dmtucker/botd.svg
    :target: https://hub.docker.com/r/dmtucker/botd/)
-.. |PyPI Version| image:: https://img.shields.io/pypi/v/botd.svg
-   :target: https://pypi.python.org/pypi/botd
