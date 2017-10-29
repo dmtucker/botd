@@ -127,7 +127,7 @@ class Commands(object):
         bot.msg(
             user.split('!')[0],
             '\n'.join(lines)
-            if len(lines) > 0 else
+            if lines else
             textwrap.dedent(
                 cls.help.__doc__.format(
                     command='({0})'.format(
