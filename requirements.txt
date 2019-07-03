@@ -1,4 +1,0 @@
-passlib
-pyOpenSSL
-service_identity
-twisted
