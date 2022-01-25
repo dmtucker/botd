@@ -1,6 +1,3 @@
-#!/usr/bin/env python2
-# coding: utf-8
-
 """A setuptools based setup module.
 
 See:
@@ -8,33 +5,52 @@ https://packaging.python.org/en/latest/distributing.html
 https://github.com/pypa/sampleproject
 """
 
-from setuptools import setup, find_packages
 
-with open('README.rst') as readme_file:
-    README = readme_file.read()
+import codecs
+import os.path
 
-setup(
-    name='botd',
-    version='0.1.0',
-    description='IRC Bot',
-    long_description=README,
-    author='David Tucker',
-    author_email='david@tucker.name',
-    license='MIT',
-    url='https://github.com/dmtucker/botd',
-    packages=find_packages(),
-    include_package_data=True,
-    entry_points={'console_scripts': ['botd = botd.__main__:main']},
-    keywords='IRC bot',
-    install_requires=[
-        'passlib',
-        'pyOpenSSL',
-        'service_identity',
-        'twisted',
-    ],
-    classifiers=[
-        'Development Status :: 3 - Alpha',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
-    ],
-)
+import setuptools
+
+
+def read(*parts: str) -> str:
+    """Read a file in this repository."""
+    here = os.path.abspath(os.path.dirname(__file__))
+    with codecs.open(os.path.join(here, *parts), "r") as file_:
+        return file_.read()
+
+
+ENTRY_POINTS = {"console_scripts": ["botd = botd.__main__:main"]}
+
+
+if __name__ == "__main__":
+    setuptools.setup(
+        name="botd",
+        description="IRC Bot",
+        long_description=read("README.rst"),
+        long_description_content_type="text/x-rst",
+        author="David Tucker",
+        author_email="david@tucker.name",
+        license="LGPLv2+",
+        url="https://pypi.org/project/botd",
+        project_urls={
+            "Code": "https://github.com/dmtucker/botd",
+            "Documentation": "https://dmtucker.github.io/botd",
+            "Issues": "https://github.com/dmtucker/botd/issues",
+        },
+        package_dir={"": "src"},
+        packages=setuptools.find_packages("src"),
+        include_package_data=True,
+        setup_requires=["setuptools_scm[toml] >= 6.0"],
+        python_requires=">= 3.9",
+        install_requires=[
+            "passlib",
+            "pyOpenSSL",
+            "service_identity",
+            "twisted",
+        ],
+        entry_points=ENTRY_POINTS,
+        classifiers=[
+            "Intended Audience :: End Users/Desktop",
+            "Programming Language :: Python :: 3.9",
+        ],
+    )

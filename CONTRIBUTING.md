@@ -39,9 +39,9 @@ Propose changes by [creating a pull request](https://help.github.com/articles/cr
 
 ### Continuous Integration
 
-[Travis CI](https://travis-ci.com/) builds, tests, and deploys the project automatically.
+[GitHub Actions](https://github.com/features/actions) builds, tests, and deploys the project automatically.
 
-[![Travis (.com) branch](https://img.shields.io/travis/com/dmtucker/botd/master.svg)](https://travis-ci.com/dmtucker/botd)
+[![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/dmtucker/botd/Validation/master)](https://github.com/dmtucker/botd/actions)
 
 ## Releases
 

@@ -1,6 +1,5 @@
 """Botd IRC Interface"""
 
-from __future__ import absolute_import
 
 from functools import wraps
 import inspect
@@ -10,52 +9,64 @@ from twisted.internet import reactor
 
 
 def argv_length(minimum, maximum):
-    """Create a decorator that checks for an appropriate number of args in the message."""
+    """Create a decorator that checks for an appropriate number of message args."""
+
     def decorator(func):
         """Decorate functions that expect args in the message."""
+
         @wraps(func)
         def decorated(cls, bot, user, channel, message):
             """Call the function if the expected number of arguments were provided."""
-            argv = message.split(' ')
+            argv = message.split(" ")
             if minimum <= len(argv) <= maximum:
                 func(cls, bot, user, channel, message)
             else:
-                bot.msg(user.split('!')[0], textwrap.dedent(func.__doc__).strip())
+                bot.msg(user.split("!")[0], textwrap.dedent(func.__doc__).strip())
+
         return decorated
+
     return decorator
 
 
 def require_authorization(key_index=None):
     """Create a decorator that checks for authorization."""
+
     def decorator(func, key_index=key_index):
         """Decorate functions that require authorization."""
+
         @wraps(func)
         def decorated(
-                cls,
-                bot,
-                user,
-                channel,
-                message,
-                key_index=key_index,
+            cls,
+            bot,
+            user,
+            channel,
+            message,
+            key_index=key_index,
         ):  # pylint: disable=too-many-arguments
             """Call the function if the user is authorized."""
-            argv = message.split(' ')
-            key = argv[key_index] if key_index is not None and key_index < len(argv) else None
+            argv = message.split(" ")
+            key = (
+                argv[key_index]
+                if key_index is not None and key_index < len(argv)
+                else None
+            )
             if bot.authorize(user, key):
                 func(cls, bot, user, channel, message)
             else:
                 bot.msg(
-                    user.split('!')[0],
-                    '{0} is not authorized.'.format(user)
-                    if key is None else
-                    'Incorrect Key: {0}'.format(key),
+                    user.split("!")[0],
+                    f"{user} is not authorized."
+                    if key is None
+                    else f"Incorrect Key: {key}",
                 )
+
         return decorated
+
     return decorator
 
 
 # pylint: disable=unused-argument
-class Commands(object):
+class Commands:
 
     """Methods Invocable via IRC"""
 
@@ -66,7 +77,7 @@ class Commands(object):
         usage: admins
         List the bot admins.
         """
-        bot.msg(user.split('!')[0], ', '.join(bot.admins))
+        bot.msg(user.split("!")[0], ", ".join(bot.admins))
 
     @classmethod
     @argv_length(2, 2)
@@ -76,7 +87,7 @@ class Commands(object):
         usage: key {key}
         Set a new bot key.
         """
-        bot.set_key(message.split(' ')[1])
+        bot.set_key(message.split(" ")[1])
 
     @classmethod
     @argv_length(2, 3)
@@ -86,7 +97,7 @@ class Commands(object):
         usage: join {channel} [{key}]
         Join a channel.
         """
-        bot.join(message.split(' ')[1])
+        bot.join(message.split(" ")[1])
 
     @classmethod
     @argv_length(2, 3)
@@ -96,7 +107,7 @@ class Commands(object):
         usage: leave {channel} [{key}]
         Leave a channel.
         """
-        bot.leave(message.split(' ')[1])
+        bot.leave(message.split(" ")[1])
 
     @classmethod
     @argv_length(1, 2)
@@ -120,21 +131,27 @@ class Commands(object):
             command = commands[0]
             func = getattr(cls, command, None)
             lines.append(
-                'Invalid Command: {0}'.format(command)
-                if func is None else
-                textwrap.dedent(func.__doc__).strip()
+                f"Invalid Command: {command}"
+                if func is None
+                else textwrap.dedent(func.__doc__).strip(),
             )
         bot.msg(
-            user.split('!')[0],
-            '\n'.join(lines)
-            if lines else
-            textwrap.dedent(
+            user.split("!")[0],
+            "\n".join(lines)
+            if lines
+            else textwrap.dedent(
                 cls.help.__doc__.format(
-                    command='({0})'.format(
-                        '|'.join([
-                            name for name, _ in inspect.getmembers(cls, predicate=inspect.ismethod)
-                        ]),
-                    ),
+                    command="("
+                    + "|".join(
+                        [
+                            name
+                            for name, _ in inspect.getmembers(
+                                cls,
+                                predicate=inspect.ismethod,
+                            )
+                        ],
+                    )
+                    + ")",
                 ),
-            ).strip()
+            ).strip(),
         )
