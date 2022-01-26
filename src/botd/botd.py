@@ -66,11 +66,13 @@ class Botd(irc.IRCClient):  # pylint: disable=abstract-method
 
     def privmsg(self, user, channel, message):
         if channel == self.nickname:
-            f = getattr(BotdCommands, message.split()[0], None)
-            if f is None:
+            command = message.split()[0]
+            try:
+                command_func = getattr(BotdCommands, command)
+            except AttributeError:
                 log.msg(f"{user}: {message}")
             else:
-                f(self, user, channel, message)
+                command_func(self, user, channel, message)
 
     def signedOn(self):  # noqa: N802
         log.msg(f"{self.nickname} signs on to {self.hostname}.")
@@ -99,4 +101,4 @@ class BotdFactory(protocol.ClientFactory):
 
     def clientConnectionFailed(self, connector, reason):  # noqa: N802
         log.msg("\n".join(["Connection Failed", str(reason).strip()]))
-        reactor.stop()
+        reactor.stop()  # pylint: disable=no-member

@@ -117,7 +117,7 @@ class Commands:
         usage: stop [{key}]
         Stop running.
         """
-        reactor.stop()
+        reactor.stop()  # pylint: disable=no-member
 
     @classmethod
     def help(cls, bot, user, channel, message):

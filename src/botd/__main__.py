@@ -59,7 +59,7 @@ def main(args=None):
     if args is None:
         args = cli().parse_args()
     log.startLogging(sys.stdout)
-    reactor.connectSSL(
+    reactor.connectSSL(  # pylint: disable=no-member
         host=args.server,
         port=args.port,
         factory=botd.BotdFactory(
@@ -70,7 +70,7 @@ def main(args=None):
         ),
         contextFactory=ssl.ClientContextFactory(),
     )
-    reactor.run()
+    reactor.run()  # pylint: disable=no-member
 
 
 if __name__ == "__main__":
