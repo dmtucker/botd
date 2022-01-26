@@ -49,7 +49,7 @@ def cli(parser=None):
         "server",
         nargs="?",
         help="Specify a server to connect to.",
-        default="chat.freenode.net",
+        default="irc.libera.chat",
     )
     return parser
 
