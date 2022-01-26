@@ -1,12 +1,7 @@
-FROM python:2
-
-RUN pip install --upgrade pip
-
-WORKDIR /src
+FROM python:3.9
+RUN pip install --upgrade pipenv
+WORKDIR /botd
 COPY . .
-RUN rm -rf dist
-RUN ./setup.py sdist
-RUN pip install dist/*
-
-WORKDIR /
-ENTRYPOINT ["botd"]
+RUN pipenv install --deploy
+RUN pipenv check
+ENTRYPOINT ["pipenv", "run", "botd"]
