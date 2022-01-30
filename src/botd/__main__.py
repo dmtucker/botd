@@ -1,4 +1,4 @@
-"""BotdFactory CLI Interface"""
+"""Define the BotdFactory CLI."""
 
 from __future__ import absolute_import
 
