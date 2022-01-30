@@ -23,7 +23,7 @@ class Botd(irc.IRCClient):  # pylint: disable=abstract-method
     def set_key(self, key):
         """Set a new bot key."""
         log.msg(f"The key for {self.nickname} is {key}.")
-        self.key_hash = custom_app_context.encrypt(key)
+        self.key_hash = custom_app_context.hash(key)
 
     def authorize(self, user, key=None):
         """Determine if a user and/or key grants permission for admin actions."""
