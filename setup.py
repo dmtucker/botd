@@ -44,9 +44,7 @@ if __name__ == "__main__":
         python_requires=">= 3.9",
         install_requires=[
             "passlib >= 1.7",
-            "pyOpenSSL",
-            "service_identity",
-            "twisted",
+            "twisted[tls] >= 22.1",
         ],
         entry_points=ENTRY_POINTS,
         classifiers=[
