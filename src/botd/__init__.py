@@ -1,1 +1,1 @@
-"""A Python IRC Bot"""
+"""Execute commands over IRC."""

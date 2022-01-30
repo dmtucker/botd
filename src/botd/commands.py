@@ -1,4 +1,4 @@
-"""Botd IRC Interface"""
+"""Define the Botd IRC Interface."""
 
 
 from functools import wraps
@@ -67,15 +67,15 @@ def require_authorization(key_index=None):
 
 # pylint: disable=unused-argument
 class Commands:
-
-    """Methods Invocable via IRC"""
+    """Define operations that can be invoked via IRC."""
 
     @classmethod
     @argv_length(1, 1)
     def admins(cls, bot, user, channel, message):
         """
-        usage: admins
         List the bot admins.
+
+        usage: admins
         """
         bot.msg(user.split("!")[0], ", ".join(bot.admins))
 
@@ -84,8 +84,9 @@ class Commands:
     @require_authorization()
     def key(cls, bot, user, channel, message):
         """
-        usage: key {key}
         Set a new bot key.
+
+        usage: key {key}
         """
         bot.set_key(message.split(" ")[1])
 
@@ -94,8 +95,9 @@ class Commands:
     @require_authorization(key_index=2)
     def join(cls, bot, user, channel, message):
         """
-        usage: join {channel} [{key}]
         Join a channel.
+
+        usage: join {channel} [{key}]
         """
         bot.join(message.split(" ")[1])
 
@@ -104,8 +106,9 @@ class Commands:
     @require_authorization(key_index=2)
     def leave(cls, bot, user, channel, message):
         """
-        usage: leave {channel} [{key}]
         Leave a channel.
+
+        usage: leave {channel} [{key}]
         """
         bot.leave(message.split(" ")[1])
 
@@ -114,16 +117,18 @@ class Commands:
     @require_authorization(key_index=1)
     def stop(cls, bot, user, channel, message):
         """
-        usage: stop [{key}]
         Stop running.
+
+        usage: stop [{key}]
         """
         reactor.stop()  # pylint: disable=no-member
 
     @classmethod
     def help(cls, bot, user, channel, message):
         """
-        usage: help {command}
         Show helpful information.
+
+        usage: help {command}
         """
         lines = []
         commands = message.split()[1:]
