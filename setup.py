@@ -43,7 +43,7 @@ if __name__ == "__main__":
         setup_requires=["setuptools_scm[toml] >= 6.0"],
         python_requires=">= 3.9",
         install_requires=[
-            "passlib",
+            "passlib >= 1.7",
             "pyOpenSSL",
             "service_identity",
             "twisted",
