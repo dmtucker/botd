@@ -33,7 +33,7 @@
         },
         "botd": {
             "path": ".",
-            "version": "==0.1.dev38+g02fb8ba"
+            "version": "==0.1.dev42+gbee282c"
         },
         "cffi": {
             "hashes": [
@@ -227,6 +227,9 @@
             "version": "==1.16.0"
         },
         "twisted": {
+            "extras": [
+                "tls"
+            ],
             "hashes": [
                 "sha256:b7971ec9805b0f80e1dcb1a3721d7bfad636d5f909de687430ce373979d67b61",
                 "sha256:ccd638110d9ccfdc003042aa3e1b6d6af272eaca45d36e083359560549e3e848"
