@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 botd = {path = "."}
+wheel = ">=0.38"  # https://pyup.io/vulnerabilities/PVE-2022-51499/51499/
 
 [dev-packages]
 
