@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 botd = {path = "."}
+pyopenssl = "<22"  # https://data.safetycli.com/v/65213/742
 
 [dev-packages]
 
