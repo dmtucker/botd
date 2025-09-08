@@ -1,12 +1,16 @@
 """Define Botd and BotdFactory."""
 
+import hashlib
 
-from passlib.apps import custom_app_context  # type: ignore
 from twisted.internet import protocol, reactor
 from twisted.python import log
 from twisted.words.protocols import irc
 
 from botd.commands import Commands as BotdCommands
+
+
+def _key_hexdigest(key: str):
+    return hashlib.sha256(key.encode()).hexdigest()
 
 
 class Botd(irc.IRCClient):  # pylint: disable=abstract-method
@@ -23,14 +27,14 @@ class Botd(irc.IRCClient):  # pylint: disable=abstract-method
     def set_key(self, key):
         """Set a new bot key."""
         log.msg(f"The key for {self.nickname} is {key}.")
-        self.key_hash = custom_app_context.hash(key)
+        self.key_hash = _key_hexdigest(key)
 
     def authorize(self, user, key=None):
         """Determine if a user and/or key grants permission for admin actions."""
         return (
             user.split("!")[0] in self.admins
             if key is None
-            else custom_app_context.verify(key, self.key_hash)
+            else (_key_hexdigest(key) == self.key_hash)
         )
 
     # Callbacks
