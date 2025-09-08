@@ -1,6 +1,5 @@
 """Define the Botd IRC Interface."""
 
-
 from functools import wraps
 import inspect
 import textwrap
@@ -35,14 +34,14 @@ def require_authorization(key_index=None):
         """Decorate functions that require authorization."""
 
         @wraps(func)
-        def decorated(
+        def decorated(  # pylint: disable=too-many-arguments
             cls,
             bot,
             user,
             channel,
             message,
             key_index=key_index,
-        ):  # pylint: disable=too-many-arguments
+        ):  # pylint: disable=too-many-positional-arguments
             """Call the function if the user is authorized."""
             argv = message.split(" ")
             key = (
@@ -55,9 +54,11 @@ def require_authorization(key_index=None):
             else:
                 bot.msg(
                     user.split("!")[0],
-                    f"{user} is not authorized."
-                    if key is None
-                    else f"Incorrect Key: {key}",
+                    (
+                        f"{user} is not authorized."
+                        if key is None
+                        else f"Incorrect Key: {key}"
+                    ),
                 )
 
         return decorated
@@ -136,27 +137,31 @@ class Commands:
             command = commands[0]
             func = getattr(cls, command, None)
             lines.append(
-                f"Invalid Command: {command}"
-                if func is None
-                else textwrap.dedent(func.__doc__).strip(),
+                (
+                    f"Invalid Command: {command}"
+                    if func is None
+                    else textwrap.dedent(func.__doc__).strip()
+                ),
             )
         bot.msg(
             user.split("!")[0],
-            "\n".join(lines)
-            if lines
-            else textwrap.dedent(
-                cls.help.__doc__.format(
-                    command="("
-                    + "|".join(
-                        [
-                            name
-                            for name, _ in inspect.getmembers(
-                                cls,
-                                predicate=inspect.ismethod,
-                            )
-                        ],
-                    )
-                    + ")",
-                ),
-            ).strip(),
+            (
+                "\n".join(lines)
+                if lines
+                else textwrap.dedent(
+                    cls.help.__doc__.format(
+                        command="("
+                        + "|".join(
+                            [
+                                name
+                                for name, _ in inspect.getmembers(
+                                    cls,
+                                    predicate=inspect.ismethod,
+                                )
+                            ],
+                        )
+                        + ")",
+                    ),
+                ).strip()
+            ),
         )
