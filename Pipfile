@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-twisted = {extras = ["tls"], version = ">=22.4"}
+twisted = {extras = ["tls"], version = ">=26.4.0rc2"}
 
 [dev-packages]
 bandit = "*"
